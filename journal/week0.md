@@ -1,20 +1,20 @@
 # Week 0 — Billing and Architecture
-## Required Homework
+# Required Homework
 
-- ### Conceptual Diagram
+## Conceptual Diagram
 ![Conceptual Architecture](assets/sketch.png)
 
-- ### Logical Architecture diagram using Lucid Charts
+## Logical Architecture diagram using Lucid Charts
 ![Logical Architecture by Lucid Charts](assets/Diagram.png)
 [Link to the chart](https://lucid.app/lucidchart/87d403d6-fe87-4485-a390-e85e5b337999/edit?viewport_loc=-310%2C18%2C2560%2C1216%2C0_0&invitationId=inv_5b59f24d-f3f4-4965-94fb-e4bc6d4053bb)
 
-- ### Creating an IAM admin user
+## Creating an IAM admin user
 ![](assets/admin%20user.png)
 
-- ### Generating AWS Credentials to be used with Gitpod
+## Generating AWS Credentials to be used with Gitpod
 ![](assets/Access_key_for_CLI.png)
 
-- ### Installing AWS CLI on Gitpod
+## Installing AWS CLI on Gitpod
 1) referring to this [doc](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) for instructions to configure AWS CLI using env vars
   Either via CLI:
   ``` gp env NAME=VALUE ```
@@ -22,7 +22,7 @@
 
   ![setting AWS creds env vars persistently in Gitpod](assets/env_vars.png)
   
-2) Editing the [.gitpod.yml](../.gitpod.yml) file to insert task for AWS CLI installation
+2) Editing the [.gitpod.yml](../.gitpod.yml) file to insert task for AWS CLI installation upon startup
    ```yml
     tasks:
       - name: aws-cli
@@ -44,7 +44,7 @@
     ![](assets/Verify_AWS_Installation.png)
     
     
-- ### Creating an AWS Budget
+## Creating an AWS Budget
 via GUI:
   ![](assets/budget_GUI.png)
 or via CLI:
@@ -113,7 +113,7 @@ by referring to AWS CLI [docs](https://awscli.amazonaws.com/v2/documentation/api
   ![](assets/Budget_CLI.png)
   ![](assets/Budget_CLI2.png)
   
-- ### Creating a Billing Alarm
+## Creating a Billing Alarm:
 1) Create an SNS [topic](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sns/create-topic.html#examples)
 ``` 
 aws sns create-topic --name my-billing-alarm
@@ -128,8 +128,8 @@ aws sns subscribe \
 3) Confirm the pending subscription
 
 ![](assets/SNS-Topic-and-subcription.png)
-4) Create an Alarm via Cloud Watch
-Creating a ```billing-alarm.json``` file
+4) Create an Alarm via Cloud Watch:
+- Creating a ```billing-alarm.json``` file
 ```json
 {
     "AlarmName": "DailyEstimatedCharges",
@@ -167,7 +167,7 @@ Creating a ```billing-alarm.json``` file
     }]
   }
 ```
-By referring to this [doc](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudwatch/put-metric-alarm.html#examples) 
+- By referring to this [doc](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudwatch/put-metric-alarm.html#examples) 
 we can create a billing alarm by running this command
 ``` aws cloudwatch put-metric-alarm --cli-input-json file://json/billing-alarm.json ```
 
