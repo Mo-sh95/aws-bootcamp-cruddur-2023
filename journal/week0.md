@@ -95,7 +95,7 @@ by referring to AWS CLI [docs](https://awscli.amazonaws.com/v2/documentation/api
         },
         "Subscribers": [
             {
-                "Address": "mo.shaa",
+                "Address": "mo.shaa_____",
                 "SubscriptionType": "EMAIL"
             }
         ]
@@ -113,5 +113,19 @@ by referring to AWS CLI [docs](https://awscli.amazonaws.com/v2/documentation/api
   ![](assets/Budget_CLI.png)
   ![](assets/Budget_CLI2.png)
   
-
+- ### Creating a Billing Alarm
+1) Create an SNS [topic](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sns/create-topic.html#examples)
+``` 
+aws sns create-topic --name my-billing-alarm
+```
+2) [Subscribe](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sns/subscribe.html) to that SNS topic
+```
+aws sns subscribe \
+    --topic-arn $(aws sns create-topic --name my-billing-alarm --query TopicArn --output text) \
+    --protocol email \
+    --notification-endpoint mo.shaa___
+```
+3) Confirm the pending subscription
+![](assets/SNS-Topic-and-subcription.png)
+4) Create an Alarm via Cloud Watch
 ## Additional Challenges
