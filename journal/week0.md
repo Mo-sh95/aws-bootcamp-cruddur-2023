@@ -126,6 +126,50 @@ aws sns subscribe \
     --notification-endpoint mo.shaa___
 ```
 3) Confirm the pending subscription
+
 ![](assets/SNS-Topic-and-subcription.png)
 4) Create an Alarm via Cloud Watch
+Creating a ```billing-alarm.json``` file
+```json
+{
+    "AlarmName": "DailyEstimatedCharges",
+    "AlarmDescription": "This alarm would be triggered if the daily estimated charges exceeds 1$",
+    "ActionsEnabled": true,
+    "AlarmActions": [
+        "arn:aws:sns:us-east-1:321568110654:my-billing-alarm"
+    ],
+    "EvaluationPeriods": 1,
+    "DatapointsToAlarm": 1,
+    "Threshold": 1,
+    "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+    "TreatMissingData": "breaching",
+    "Metrics": [{
+        "Id": "m1",
+        "MetricStat": {
+            "Metric": {
+                "Namespace": "AWS/Billing",
+                "MetricName": "EstimatedCharges",
+                "Dimensions": [{
+                    "Name": "Currency",
+                    "Value": "USD"
+                }]
+            },
+            "Period": 86400,
+            "Stat": "Maximum"
+        },
+        "ReturnData": false
+    },
+    {
+        "Id": "e1",
+        "Expression": "IF(RATE(m1)>0,RATE(m1)*86400,0)",
+        "Label": "DailyEstimatedCharges",
+        "ReturnData": true
+    }]
+  }
+```
+By referring to this [doc](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/cloudwatch/put-metric-alarm.html#examples) 
+we can create a billing alarm by running this command
+``` aws cloudwatch put-metric-alarm --cli-input-json file://json/billing-alarm.json ```
+
+  ![](assets/billing-alarm.png)
 ## Additional Challenges
