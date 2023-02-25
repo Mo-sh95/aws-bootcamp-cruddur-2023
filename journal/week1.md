@@ -184,7 +184,10 @@ docker compose up
 ```
 ![](assets/docker-compose-file.png)
 
-#### Creating a dynamoDB table
+## Working with DynamoDB
+By referring to this [repo](https://github.com/100DaysOfCloud/challenge-dynamodb-local) for information about working with DynamoDB
+
+### Creating a dynamoDB table
 ```sh
 aws dynamodb create-table \
     --endpoint-url http://localhost:8000 \
@@ -206,6 +209,7 @@ aws dynamodb put-item \
         '{"Artist": {"S": "No One You Know"}, "SongTitle": {"S": "Call Me Today"}, "AlbumTitle": {"S": "Somewhat Famous"}}' \
     --return-consumed-capacity TOTAL  
 ```
+
 ### Listing the table
 ```sh
 aws dynamodb list-tables --endpoint-url http://localhost:8000
@@ -214,7 +218,7 @@ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```sh
 aws dynamodb scan --table-name Music --query "Items" --endpoint-url http://localhost:8000
 ```
-
+![](assets/dynamodb.png)
 
 ## Homework challenges
 
