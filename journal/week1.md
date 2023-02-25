@@ -1,7 +1,8 @@
 # Week 1 — App Containerization
 # Required Homework
 ## Running Python App:
-first we need to install the required modules and load the required Env Vars
+first we need to install the required modules and load the required Env Vars.
+
 the ```requirements.txt``` file includes ```flask``` and ```flask-cors``` modules
 ```sh
 cd backend-flask
@@ -125,6 +126,7 @@ services:
     volumes: 
       - db:/var/lib/postgresql/data
 volumes:
+  # named volume
   db:
     driver: local
 ```
@@ -172,8 +174,13 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      # directory volume mapping
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+```
+### Verifying that the Application is running
+```sh
+docker compose up
 ```
 
 
