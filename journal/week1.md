@@ -220,8 +220,33 @@ aws dynamodb scan --table-name Music --query "Items" --endpoint-url http://local
 ```
 ![](assets/dynamodb.png)
 
+## Working with Postgres
+```sh 
+psql -h localhost -U postgres
+```
+![](assets/psql-client.png)
+
+## Creating the Notifications feature
+
 ## Homework challenges
 
+### Creating a path for the notifications feature inside the ```openapi-3.0.yml``` file
+```yml
+/api/activities/notifications:
+    get:
+      description: Returns an array of activities for the following list
+      tags:
+        - activities
+      responses:
+        '200':
+          description: Returns an array of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+```
 
 
 
