@@ -22,9 +22,8 @@ the output:
 ```dockerfile
 FROM python:3.10-slim-buster
 WORKDIR /backend-flask
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
 COPY . .
+RUN pip3 install -r requirements.txt
 ENV FLASK_ENV=development
 EXPOSE ${PORT}
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
@@ -227,9 +226,6 @@ psql -h localhost -U postgres
 ![](assets/psql-client.png)
 
 ## Creating the Notifications feature
-
-## Homework challenges
-
 ### Creating a path for the notifications feature inside the ```openapi-3.0.yml``` file
 ```yml
 /api/activities/notifications:
@@ -401,3 +397,64 @@ const router = createBrowserRouter([
 Verifying that we can hit the endpoint
 ![](assets/notifications-verify.png)
 
+## Homework challenges
+1) Running the dockerfile CMD as an external script
+example: using the ```backend-flask``` Dockerfile
+```sh
+touch script.sh
+cat << EOF >> script.sh
+python3 -m flask run --host=0.0.0.0 --port=4567
+EOF
+```
+```sh
+chmod a+x script.sh
+```
+```dockerfile
+FROM python:3.10-slim-buster
+WORKDIR /backend-flask
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+COPY . .
+ENV FLASK_ENV=development
+EXPOSE ${PORT}
+CMD [ "sh", "-c", "./script.sh"]
+```
+2) Pushing and tagging a image to DockerHub
+Example: Creating a figlet image, pushing it to dockerhub with a tag
+vim ```Dockerfile```
+```dockerfile
+FROM alpine
+RUN apk update && apk upgrade
+RUN apk add figlet
+ENTRYPOINT ["figlet"]
+CMD ["--help"]
+```
+```sh
+docker build -t moshaban95/aws-cloud-bootcamp-2023:figlet .
+docker login -u moshaban95 #authentication to Dockerhub is required for pushing
+docker push moshaban95/aws-cloud-bootcamp-2023:figlet
+```
+
+![](assets/dockerhub.png)
+
+Running the image:
+```sh
+docker run moshaban95/aws-cloud-bootcamp-2023:figlet aws-cloud-bootcamp-2023
+```
+![](assets/figlet.png)
+
+3) Implementing a healthcheck in the V3 Docker compose file:
+Example: with the frontend service:
+Insert this section in the ```docker-compose.yml``` file
+```yml
+healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+```
+then trigger a ```docker compose down``` then ```docker compose up``` again!
+```sh
+watch docker ps
+```
