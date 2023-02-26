@@ -455,6 +455,12 @@ healthcheck:
       start_period: 40s
 ```
 then trigger a ```docker compose down``` then ```docker compose up``` again!
+To check the health status:
 ```sh
 watch docker ps
+```
+![](assets/health-check.png)
+or
+```sh
+docker inspect <container-id>
 ```
