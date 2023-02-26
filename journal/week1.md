@@ -398,7 +398,7 @@ Verifying that we can hit the endpoint
 ![](assets/notifications-verify.png)
 
 ## Homework challenges
-1) Running the dockerfile CMD as an external script
+### Running the dockerfile CMD as an external script
 example: using the ```backend-flask``` Dockerfile
 ```sh
 touch script.sh
@@ -419,8 +419,10 @@ ENV FLASK_ENV=development
 EXPOSE ${PORT}
 CMD [ "sh", "-c", "./script.sh"]
 ```
-2) Pushing and tagging a image to DockerHub
+### Pushing and tagging a image to DockerHub:
+
 Example: Creating a figlet image, pushing it to dockerhub with a tag
+
 vim ```Dockerfile```
 ```dockerfile
 FROM alpine
@@ -443,9 +445,10 @@ docker run moshaban95/aws-cloud-bootcamp-2023:figlet aws-cloud-bootcamp-2023
 ```
 ![](assets/figlet.png)
 
-3) Implementing a healthcheck in the V3 Docker compose file:
+### Implementing a healthcheck in the V3 Docker compose file:
 Example: with the frontend service:
 Insert this section in the ```docker-compose.yml``` file
+
 for **frontend**
 ```yml
 healthcheck:
