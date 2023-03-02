@@ -35,14 +35,13 @@ FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 ```
 #### Configuring Honeycomb Env Vars for backend-flask in the ```docker-compose.yml``` file
-under services:backend_flask:environment, define these vars
+under ```services:backend_flask:environment```, define these vars
 ```yml
 OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
 OTEL_EXPORTER_OTLP_HEADERS: "x-honeycomb-team=${HONEYCOMB_API_KEY}"
-OTEL_SERVICE_NAME: "${HONEYCOMB_SERVICE_NAME}"
+OTEL_SERVICE_NAME: "backend_flask"
 ```
-then define these vars in gitpod:
+then define this var in gitpod:
 ```sh
 gp env HONEYCOMB_API_KEY="UjDlY...."
-gp env HONEYCOMB_SERVICE_NAME="Cruddur"
 ```
