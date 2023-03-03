@@ -283,3 +283,53 @@ aws xray get-service-graph --start-time $(($EPOCH-300)) --end-time $EPOCH
 
 ![](assets/xray.png)
 ![](assets/xray2.png)
+
+## CloudWatch Logs
+#### Installing the required python dependencies
+```sh
+cat << EOF >> /backend-flask/requirements.txt
+watchtower
+EOF
+```
+
+#### Editing the ```app.py``` file
+```py
+import watchtower
+import logging
+from time import strftime
+```
+```py
+# Configuring Logger to Use CloudWatch
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(cw_handler)
+LOGGER.info("Test Log")
+```
+```py
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+```
+```py
+@app.route("/api/activities/home", methods=['GET'])
+def data_home():
+  data = HomeActivities.run(logger=LOGGER)
+  return data, 200
+```
+in the ```backend-flask/services/home_activities.py ``` file add this section:
+```py
+class HomeActivities:
+  def run(logger):
+    logger.info("HomeActivities")
+```
+Add these env vars in the ```docker-compose.yml``` file for backend-flask:
+```yml
+      AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+```
