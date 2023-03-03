@@ -333,3 +333,7 @@ Add these env vars in the ```docker-compose.yml``` file for backend-flask:
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
 ```
+![](assets/cw.png)
+![](assets/cw2.png)
+
+**Note** I disabled both X-Ray and CloudWatch after testing them
