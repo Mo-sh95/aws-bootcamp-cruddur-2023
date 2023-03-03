@@ -13,3 +13,7 @@ aws-xray-sdk
 
 # Required for CloudWatch
 watchtower
+
+# Required for Rollbar
+blinker
+rollbar
