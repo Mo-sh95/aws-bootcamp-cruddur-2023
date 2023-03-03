@@ -281,5 +281,5 @@ aws xray get-service-graph --start-time $(($EPOCH-300)) --end-time $EPOCH
 ```
 </details>
 
-![](/assets/xray.png)
-![](/assets/xray2.png)
+![](assets/xray.png)
+![](assets/xray2.png)
