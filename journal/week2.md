@@ -86,7 +86,7 @@ vim ```~/json/xray.json```
 ```sh
 aws xray create-group \
    --group-name "Cruddur-Backend-flask" \
-   --filter-expression "service(\"backend-flask\")
+   --filter-expression "service(\"backend-flask\")"
 ```
 #### Running the X-Ray daemon as a container:
 ```vim ~/docker-compose.yml ```
@@ -113,3 +113,173 @@ then add these env vars to the **backend-flask** container
 EPOCH=$(date +%s)
 aws xray get-service-graph --start-time $(($EPOCH-300)) --end-time $EPOCH
 ```
+<details>
+<summary>click to view stdout</summary>
+
+```json
+    {
+    "Services": [
+        {
+            "ReferenceId": 0,
+            "Name": "4567-mosh95-awsbootcampcrudd-zl9lgt6sp3k.ws-eu89.gitpod.io",
+            "Names": [
+                "4567-mosh95-awsbootcampcrudd-zl9lgt6sp3k.ws-eu89.gitpod.io"
+            ],
+            "Root": true,
+            "State": "active",
+            "StartTime": "2023-03-03T16:05:54+00:00",
+            "EndTime": "2023-03-03T16:07:49+00:00",
+            "Edges": [],
+            "SummaryStatistics": {
+                "OkCount": 4,
+                "ErrorStatistics": {
+                    "ThrottleCount": 0,
+                    "OtherCount": 1,
+                    "TotalCount": 1
+                },
+                "FaultStatistics": {
+                    "OtherCount": 0,
+                    "TotalCount": 0
+                },
+                "TotalCount": 5,
+                "TotalResponseTime": 0.004
+            },
+            "DurationHistogram": [
+                {
+                    "Value": 0.001,
+                    "Count": 5
+                }
+            ],
+            "ResponseTimeHistogram": [
+                {
+                    "Value": 0.001,
+                    "Count": 5
+                }
+            ]
+        },
+        {
+            "ReferenceId": 1,
+            "Name": "4567-mosh95-awsbootcampcrudd-zl9lgt6sp3k.ws-eu89.gitpod.io",
+            "Names": [
+                "4567-mosh95-awsbootcampcrudd-zl9lgt6sp3k.ws-eu89.gitpod.io"
+            ],
+            "Type": "client",
+            "State": "unknown",
+            "StartTime": "2023-03-03T16:05:54+00:00",
+            "EndTime": "2023-03-03T16:07:49+00:00",
+            "Edges": [
+                {
+                    "ReferenceId": 0,
+                    "StartTime": "2023-03-03T16:05:54+00:00",
+                    "EndTime": "2023-03-03T16:07:49+00:00",
+                    "SummaryStatistics": {
+                        "OkCount": 4,
+                        "ErrorStatistics": {
+                            "ThrottleCount": 0,
+                            "OtherCount": 1,
+                            "TotalCount": 1
+                        },
+                        "FaultStatistics": {
+                            "OtherCount": 0,
+                            "TotalCount": 0
+                        },
+                        "TotalCount": 5,
+                        "TotalResponseTime": 0.004
+                    },
+                    "ResponseTimeHistogram": [
+                        {
+                            "Value": 0.001,
+                            "Count": 5
+                        }
+                    ],
+                    "Aliases": []
+                }
+            ]
+        },
+        {
+            "ReferenceId": 2,
+            "Name": "backend-flask",
+            "Names": [
+                "backend-flask"
+            ],
+            "Root": true,
+            "State": "active",
+            "StartTime": "2023-03-03T16:04:04+00:00",
+            "EndTime": "2023-03-03T16:08:05+00:00",
+            "Edges": [],
+            "SummaryStatistics": {
+                "OkCount": 5,
+                "ErrorStatistics": {
+                    "ThrottleCount": 0,
+                    "OtherCount": 0,
+                    "TotalCount": 0
+                },
+                "FaultStatistics": {
+                    "OtherCount": 0,
+                    "TotalCount": 0
+                },
+                "TotalCount": 5,
+                "TotalResponseTime": 0.004
+            },
+            "DurationHistogram": [
+                {
+                    "Value": 0.001,
+                    "Count": 5
+                }
+            ],
+            "ResponseTimeHistogram": [
+                {
+                    "Value": 0.001,
+                    "Count": 5
+                }
+            ]
+        },
+        {
+            "ReferenceId": 3,
+            "Name": "backend-flask",
+            "Names": [
+                "backend-flask"
+            ],
+            "Type": "client",
+            "State": "unknown",
+            "StartTime": "2023-03-03T16:04:04+00:00",
+            "EndTime": "2023-03-03T16:08:05+00:00",
+            "Edges": [
+                {
+                    "ReferenceId": 2,
+                    "StartTime": "2023-03-03T16:04:04+00:00",
+                    "EndTime": "2023-03-03T16:08:05+00:00",
+                    "SummaryStatistics": {
+                        "OkCount": 5,
+                        "ErrorStatistics": {
+                            "ThrottleCount": 0,
+                            "OtherCount": 0,
+                            "TotalCount": 0
+                        },
+                        "FaultStatistics": {
+                            "OtherCount": 0,
+                            "TotalCount": 0
+                        },
+                        "TotalCount": 5,
+                        "TotalResponseTime": 0.004
+                    },
+                    "ResponseTimeHistogram": [
+                        {
+                            "Value": 0.001,
+                            "Count": 5
+                        }
+                    ],
+                    "Aliases": []
+                }
+            ]
+        }
+    ],
+    "StartTime": "2023-03-03T16:04:04+00:00",
+    "EndTime": "2023-03-03T16:08:04+00:00",
+    "ContainsOldGroupVersions": false
+    }
+```
+</details>
+
+![](/assets/xray.png)
+![](/assets/xray2.png)
