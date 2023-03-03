@@ -10,7 +10,13 @@ opentelemetry-exporter-otlp-proto-http
 opentelemetry-instrumentation-flask 
 opentelemetry-instrumentation-requests
 ```
-then running ```pip install -r requirements.tx```
+Either:
+```sh
+pip install -r requirements.txt
+```
+Or:
+Trigger a new gitpod environment!
+
 #### adding this section to the ```app.py``` file
 ```py
 # app.py updates
@@ -53,6 +59,9 @@ gp env HONEYCOMB_API_KEY="UjDlY...."
 cat << EOF >> /backend-flask/requirements.txt
 aws-xray-sdk
 EOF
+```
+```sh
+pip install -r requirements.txt
 ```
 #### Editing the ```app.py``` file
 ```py
@@ -337,3 +346,55 @@ Add these env vars in the ```docker-compose.yml``` file for backend-flask:
 ![](assets/cw2.png)
 
 **Note** I disabled both X-Ray and CloudWatch after testing them
+
+## Rollbar
+#### Create a new project in Rollbar named **Cruddur**
+#### Installing the required python dependencies
+```sh
+cat << EOF >> /backend-flask/requirements.txt
+blinker
+rollbar
+EOF
+```
+```sh
+pip install -r requirements.txt
+```
+```sh
+export ROLLBAR_ACCESS_TOKEN="21dcd84...."
+gp env ROLLBAR_ACCESS_TOKEN="21dcd84...."
+```
+Add this env var to **backend-flask** service in the **docker-compose** file:
+```yml
+ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
+```
+#### Editing the ```app.py``` file
+```py
+import os
+import rollbar
+import rollbar.contrib.flask
+from flask import got_request_exception
+```
+```py
+rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+@app.before_first_request
+def init_rollbar():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        rollbar_access_token,
+        # environment name
+        'production',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
+
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+```
+```py
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
+```
