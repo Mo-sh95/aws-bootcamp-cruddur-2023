@@ -401,3 +401,7 @@ def rollbar_test():
     rollbar.report_message('Hello World!', 'warning')
     return "Hello World!"
 ```
+```sh
+docker compose up
+```
+![](assets/rollbar.png)
