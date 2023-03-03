@@ -10,3 +10,6 @@ opentelemetry-instrumentation-requests
 
 # Required for AWS X-Ray
 aws-xray-sdk
+
+# Required for CloudWatch
+watchtower
