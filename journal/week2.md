@@ -300,6 +300,9 @@ cat << EOF >> /backend-flask/requirements.txt
 watchtower
 EOF
 ```
+```sh
+pip install -r requirements.txt
+```
 
 #### Editing the ```app.py``` file
 ```py
