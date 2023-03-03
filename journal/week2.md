@@ -45,3 +45,71 @@ then define this var in gitpod:
 ```sh
 gp env HONEYCOMB_API_KEY="UjDlY...."
 ```
+
+## AWS X-Ray
+### Instrumenting the backend-flask:
+#### Installing the required python dependencies
+```sh
+cat << EOF >> /backend-flask/requirements.txt
+aws-xray-sdk
+EOF
+```
+#### Editing the ```app.py``` file
+```py
+from aws_xray_sdk.core import xray_recorder
+from aws_xray_sdk.ext.flask.middleware import XRayMiddleware
+```
+#### Creating a sampling rule for collecting specific traces
+**Note**: you can do it via GUI as well but in our case we'll do it using AWS CLI:
+
+vim ```~/json/xray.json```
+```json
+{
+  "SamplingRule": {
+      "RuleName": "Cruddur-backend-flask",
+      "ResourceARN": "*",
+      "Priority": 9000,
+      "FixedRate": 0.1,
+      "ReservoirSize": 5,
+      "ServiceName": "backend-flask",
+      "ServiceType": "*",
+      "Host": "*",
+      "HTTPMethod": "*",
+      "URLPath": "*",
+      "Version": 1
+  }
+}
+```
+``` aws xray create-sampling-rule --cli-input-json file://json/xray.json ```
+
+#### Creating an X-Ray group for the backend-flask service to group its traces together
+```sh
+aws xray create-group \
+   --group-name "Cruddur-Backend-flask" \
+   --filter-expression "service(\"backend-flask\")
+```
+#### Running the X-Ray daemon as a container:
+```vim ~/docker-compose.yml ```
+then add this section:
+```yml
+xray-daemon:
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "us-east-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+```
+then add these env vars to the **backend-flask** container
+```yml
+ AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
+ AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
+```
+#### Checking service data for the last 5 mins:
+```sh
+EPOCH=$(date +%s)
+aws xray get-service-graph --start-time $(($EPOCH-300)) --end-time $EPOCH
+```
